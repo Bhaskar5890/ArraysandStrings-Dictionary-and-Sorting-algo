@@ -1,0 +1,28 @@
+public class Solution {
+    public IList<int> FindClosestElements(int[] arr, int k, int x) 
+    {
+        var resList = new List<int>();
+        
+        var maxHeap = new SortedSet<(int, int, int)>(Comparer<(int, int, int)>.Create((a,b)=>{
+                       var diff = b.Item1.CompareTo(a.Item1);
+                       return diff == 0 ? b.Item2.CompareTo(a.Item2) : diff;
+                    }));
+        
+        for (int i = 0; i < arr.Length; i++)
+        {
+            maxHeap.Add(((Math.Abs(x - arr[i])), i, arr[i]));
+            if(maxHeap.Count > k)
+            {
+                var top = maxHeap.FirstOrDefault();
+                maxHeap.Remove(top);
+            }
+        }
+        
+        foreach (var item in maxHeap.OrderBy(x => x.Item3))
+        {
+            resList.Add(item.Item3);
+        }
+        
+        return resList;
+    }
+}
